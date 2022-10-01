@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+// import 'dart:async';
+import 'package:intl/intl.dart';
 class RegistrationScreen extends StatefulWidget {
+
   const RegistrationScreen({super.key});
 
   @override
@@ -8,13 +11,27 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class InitState extends State<RegistrationScreen> {
+
+  DateTime selectedDate = DateTime.now();
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(1200, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
   void _showImageDialog(){
     showDialog(
         context:context,
         builder:(context){
           return AlertDialog(
               title:const Text("Please choose an option"),
-              content:Column(
+              content:Row(
                 mainAxisSize:MainAxisSize.min,
                 children:[
                   InkWell(
@@ -66,7 +83,7 @@ class InitState extends State<RegistrationScreen> {
 
   void _getFromCamera() async
   {
-    XFile? pickedFile = await ImagePicker().pickImage(source:ImageSource.camera);
+    XFile? pickedFile = await ImagePicker().pickImage(source:ImageSource.camera,preferredCameraDevice: CameraDevice.front);
     Navigator.pop(context);
   }
   void _getFromGallery() async
@@ -74,7 +91,7 @@ class InitState extends State<RegistrationScreen> {
     XFile? pickedFile = await ImagePicker().pickImage(source:ImageSource.gallery);
     Navigator.pop(context);
   }
-
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return initWidget();
@@ -82,7 +99,9 @@ class InitState extends State<RegistrationScreen> {
 
   Widget initWidget() {
     return Scaffold(
-      body: SingleChildScrollView(
+      body: Form(
+        key: _formKey,
+     child: SingleChildScrollView(
         child: Column(
           children: [
             Container(
@@ -134,9 +153,9 @@ class InitState extends State<RegistrationScreen> {
                   )],
                 ),
                 alignment: Alignment.center,
-                child:const TextField(
-                    cursorColor:Color(0xffF5591F),
-                    decoration:InputDecoration(
+                child:TextFormField(
+                    cursorColor:const Color(0xffF5591F),
+                    decoration:const InputDecoration(
                       icon:Icon(
                         Icons.person,
                         color:Color(0xffF5591F),
@@ -144,7 +163,13 @@ class InitState extends State<RegistrationScreen> {
                       hintText:"Enter Full Name",
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
-                    )
+                    ),
+                    validator:(value){
+                      if(value!.isEmpty){
+                        return "Enter the correct Name !";
+                      }
+
+                    }
                 )
             ),
             Container(
@@ -160,9 +185,9 @@ class InitState extends State<RegistrationScreen> {
                   )],
                 ),
                 alignment: Alignment.center,
-                child:const TextField(
-                    cursorColor:Color(0xffF5591F),
-                    decoration:InputDecoration(
+                child:TextFormField(
+                    cursorColor:const Color(0xffF5591F),
+                    decoration:const InputDecoration(
                       icon:Icon(
                         Icons.email,
                         color:Color(0xffF5591F),
@@ -170,7 +195,13 @@ class InitState extends State<RegistrationScreen> {
                       hintText:"Enter Email",
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
-                    )
+                    ),
+                    validator:(value){
+                      if(value!.isEmpty){
+                        return "Enter the correct Email !";
+                      }
+
+                    }
                 )
             ),
             Container(
@@ -186,9 +217,9 @@ class InitState extends State<RegistrationScreen> {
                   )],
                 ),
                 alignment: Alignment.center,
-                child:const TextField(
-                    cursorColor:Color(0xffF5591F),
-                    decoration:InputDecoration(
+                child:TextFormField(
+                    cursorColor:const Color(0xffF5591F),
+                    decoration:const InputDecoration(
                       icon:Icon(
                         Icons.phone,
                         color:Color(0xffF5591F),
@@ -196,8 +227,78 @@ class InitState extends State<RegistrationScreen> {
                       hintText:"Phone Number",
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
-                    )
+                    ),
+                    validator:(value){
+                      if(value!.isEmpty){
+                        return "Enter the correct Number !";
+                      }
+
+                    }
                 )
+            ),
+
+            Container(
+                margin:const EdgeInsets.only(left:20,right:20,top:20),
+                padding:const EdgeInsets.only(left:20,right:20),
+                decoration:BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  color:Colors.grey[200],
+                  boxShadow:const [BoxShadow(
+                      offset:Offset(0,10),
+                      blurRadius:50,
+                      color:Color(0xffEEEEEE)
+                  )],
+                ),
+                alignment: Alignment.center,
+                child:TextFormField(
+                    obscureText: true,
+                    cursorColor:const Color(0xffF5591F),
+                    decoration:const InputDecoration(
+                      icon:Icon(
+                        Icons.vpn_key,
+                        color:Color(0xffF5591F),
+                      ),
+                      hintText:"Enter Password",
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                    ),
+                    validator:(value){
+                      if(value!.isEmpty){
+                        return "Enter the correct Password !";
+                      }
+
+                    }
+                )
+            ),
+            Container(
+                margin:const EdgeInsets.only(left:20,right:20,top:20),
+                padding:const EdgeInsets.only(left:20,right:20),
+                decoration:BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  color:Colors.grey[200],
+                  boxShadow:const [BoxShadow(
+                      offset:Offset(0,10),
+                      blurRadius:50,
+                      color:Color(0xffEEEEEE)
+                  )],
+                ),
+                alignment: Alignment.topLeft,
+                child:Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+
+                    Text("${selectedDate.toLocal()}".split(' ')[0]),
+
+                    SizedBox(height: 20.0,
+                    ),
+                    ElevatedButton(
+
+                      child: Text('Select date'),
+                      onPressed: () => _selectDate(context),
+
+                    ),
+                  ],
+                ),
             ),
             Container(
               margin:const EdgeInsets.only(left:20,right:20,top:20),
@@ -220,42 +321,26 @@ class InitState extends State<RegistrationScreen> {
                   Icon(Icons.image_outlined),
                   SizedBox(
                     width:20,
+
                   ),
                   Text('Pick an Image')
                 ],
               ),
               ),
-            ),
-            Container(
-                margin:const EdgeInsets.only(left:20,right:20,top:20),
-                padding:const EdgeInsets.only(left:20,right:20),
-                decoration:BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color:Colors.grey[200],
-                  boxShadow:const [BoxShadow(
-                      offset:Offset(0,10),
-                      blurRadius:50,
-                      color:Color(0xffEEEEEE)
-                  )],
-                ),
-                alignment: Alignment.center,
-                child:const TextField(
-                    obscureText: true,
-                    cursorColor:Color(0xffF5591F),
-                    decoration:InputDecoration(
-                      icon:Icon(
-                        Icons.vpn_key,
-                        color:Color(0xffF5591F),
-                      ),
-                      hintText:"Enter Password",
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                    )
-                )
-            ),
-            GestureDetector(
-                onTap:()=>{
 
+            ),
+
+//-----------------------------------------------------------------------------
+
+ //-----------------------------------------------------------------------
+            GestureDetector(
+                onTap:(){
+                if(_formKey.currentState!.validate()){
+                  return;
+                }
+                else{
+                  print("Not validate");
+                }
                 },
                 child:Container(
                     margin:const EdgeInsets.only(left:20,right:20,top:60),
@@ -272,7 +357,7 @@ class InitState extends State<RegistrationScreen> {
                       boxShadow:const [BoxShadow(
                           offset:Offset(0,10),
                           blurRadius:50,
-                          color:Color(0xffEEEEEE)
+                          color:Color(0xffF5591F)
                       )],
                     ),
                     child:const Text(
@@ -283,6 +368,8 @@ class InitState extends State<RegistrationScreen> {
                     )
                 )
             ),
+
+
             Container(
                 margin:const EdgeInsets.only(top:10),
                 child:Row(
@@ -307,6 +394,10 @@ class InitState extends State<RegistrationScreen> {
           ],
         ),
       ),
+      ),
     );
   }
 }
+
+
+

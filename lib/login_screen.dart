@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'registration_screen.dart';
+// import 'package:email_validator/email_validator.dart';
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -7,14 +8,18 @@ class LoginScreen extends StatefulWidget {
   State<StatefulWidget> createState()=>InitState();
 }
 class InitState extends State<LoginScreen>{
+  final _formKey = GlobalKey<FormState>();
   @override
+
   Widget build(BuildContext context){
     return initWidget();
   }
 
   Widget initWidget(){
     return Scaffold(
-      body: SingleChildScrollView(
+      body: Form(
+        key: _formKey,
+     child: SingleChildScrollView(
         child:Column(
           children:[
             Container(
@@ -67,17 +72,23 @@ class InitState extends State<LoginScreen>{
                   )],
                 ),
                 alignment: Alignment.center,
-                child:const TextField(
-                    cursorColor:Color(0xffF5591F),
-                    decoration:InputDecoration(
+                child: TextFormField(
+                    cursorColor:const Color(0xffF5591F),
+                    decoration:const InputDecoration(
                       icon:Icon(
-                        Icons.email_outlined,
+                        Icons.email,
                         color:Color(0xffF5591F),
                       ),
                       hintText:"Enter Email",
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
-                    )
+                    ),
+                    validator:(value){
+                      if(value!.isEmpty){
+                      return "Enter the correct Email!";
+                      }
+
+            }
                 )
             ),
             Container(
@@ -93,18 +104,24 @@ class InitState extends State<LoginScreen>{
                   )],
                 ),
                 alignment: Alignment.center,
-                child:const TextField(
+                child:TextFormField(
                     obscureText: true,
-                    cursorColor:Color(0xffF5591F),
-                    decoration:InputDecoration(
+                    cursorColor:const Color(0xffF5591F),
+                    decoration:const InputDecoration(
                       icon:Icon(
-                        Icons.password_outlined,
+                        Icons.vpn_key,
                         color:Color(0xffF5591F),
                       ),
                       hintText:"Enter Password",
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
-                    )
+                    ),
+                    validator:(value){
+                 if(value!.isEmpty){
+                 return "Enter the correct Password!";
+                 }
+
+                 }
                 )
             ),
             Container(
@@ -118,7 +135,13 @@ class InitState extends State<LoginScreen>{
               ),
             ),
             GestureDetector(
-                onTap:()=>{
+                onTap:(){
+                  if(_formKey.currentState!.validate()){
+                    return;
+                  }
+                  else{
+                    print("Not validate");
+                  }
 
                 },
                 child:Container(
@@ -152,7 +175,7 @@ class InitState extends State<LoginScreen>{
                 child:Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children:[
-                      const Text("Don't Have Account? "),
+                      const Text("don't Have Account? "),
                       GestureDetector(
                           onTap:()=>{
                             Navigator.push(context,MaterialPageRoute(builder: (context)=>const RegistrationScreen()
@@ -171,6 +194,7 @@ class InitState extends State<LoginScreen>{
           ],
         ),
       ),
+    )
     );
   }
 }
